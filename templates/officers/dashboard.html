@@ -1,0 +1,50 @@
+{% extends "base.html" %}{% load ui %}{% block title %}Officer queue{% endblock %}
+{% block content %}<div class="container">
+<div class="page-head d-flex flex-wrap justify-content-between align-items-end gap-2">
+  <div><span class="chip">{% if dept %}{{ dept.name }}{% elif is_admin %}All departments{% else %}No department assigned{% endif %}</span>
+    <h1 class="mt-2">Grievance queue</h1><div class="muted small">Ordered by the genetic-algorithm schedule, using fuzzy priority, SLA deadlines and officer capacity.</div></div>
+  <div class="d-flex gap-2 no-print">
+    {% if is_admin %}<form method="get" class="d-flex gap-2"><select class="form-select form-select-sm" name="dept" onchange="this.form.submit()"><option value="">All departments</option>
+      {% for d in departments %}<option value="{{ d.code }}" {% if dept and d.code == dept.code %}selected{% endif %}>{{ d.name }}</option>{% endfor %}</select></form>{% endif %}
+    <a class="btn btn-soft btn-sm" href="{% url 'officers:export' %}{% if dept %}?dept={{ dept.code }}{% endif %}"><i class="bi bi-download"></i> Export CSV</a>
+    {% if dept %}<form method="post" action="{% url 'officers:reoptimize' %}" class="m-0">{% csrf_token %}<input type="hidden" name="dept" value="{{ dept.code }}">
+      <button class="btn btn-primary btn-sm"><i class="bi bi-arrow-repeat"></i> Re-optimise queue</button></form>{% endif %}</div></div>
+<div class="row g-3 mb-3">
+  <div class="col-6 col-lg-3"><div class="card-gq kpi"><div class="ico ico-navy"><i class="bi bi-hourglass-split"></i></div><div><div class="num">{{ stats.pending }}</div><div class="lbl">Pending</div></div></div></div>
+  <div class="col-6 col-lg-3"><div class="card-gq kpi"><div class="ico ico-red"><i class="bi bi-exclamation-octagon-fill"></i></div><div><div class="num">{{ stats.critical }}</div><div class="lbl">Critical</div></div></div></div>
+  <div class="col-6 col-lg-3"><div class="card-gq kpi"><div class="ico ico-saf"><i class="bi bi-alarm-fill"></i></div><div><div class="num">{{ stats.overdue }}</div><div class="lbl">Past SLA</div></div></div></div>
+  <div class="col-6 col-lg-3"><div class="card-gq kpi"><div class="ico ico-teal"><i class="bi bi-check2-circle"></i></div><div><div class="num">{{ stats.resolved }}</div><div class="lbl">Resolved</div></div></div></div></div>
+{% if last_run %}<div class="card-gq card-b mb-3 d-flex flex-wrap gap-4 align-items-center small">
+  <span class="chip"><i class="bi bi-cpu"></i> Last GA run</span>
+  <span><b>{{ last_run.n_items }}</b> grievances · <b>{{ last_run.generations }}</b> generations · <b>{{ last_run.runtime_s|floatformat:2 }} s</b></span>
+  <span>SLA violations <b>{{ last_run.ga_sla_violations }}</b> <span class="muted">(priority-sort: {{ last_run.baseline_sla_violations }})</span></span>
+  <span>Avg wait <b>{{ last_run.ga_avg_wait|floatformat:1 }} d</b> <span class="muted">(priority-sort: {{ last_run.baseline_avg_wait|floatformat:1 }} d)</span></span>
+  <span>Cost <b>{{ last_run.ga_cost|floatformat:0 }}</b> <span class="muted">vs {{ last_run.baseline_cost|floatformat:0 }}</span></span></div>{% endif %}
+<div class="card-gq"><div class="card-h flex-wrap">
+  <ul class="nav nav-pills gap-1"><li class="nav-item"><a class="nav-link py-1 {% if view == 'queue' %}active{% endif %}" href="?view=queue{% if dept %}&dept={{ dept.code }}{% endif %}">Optimised queue</a></li>
+    <li class="nav-item"><a class="nav-link py-1 {% if view == 'all' %}active{% endif %}" href="?view=all{% if dept %}&dept={{ dept.code }}{% endif %}">All grievances</a></li></ul>
+  <form class="d-flex flex-wrap gap-2" method="get"><input type="hidden" name="view" value="{{ view }}">{% if dept %}<input type="hidden" name="dept" value="{{ dept.code }}">{% endif %}
+    <input class="form-control form-control-sm" style="width:170px" name="q" value="{{ q }}" placeholder="Search…">
+    <select class="form-select form-select-sm" style="width:130px" name="status" onchange="this.form.submit()"><option value="">Status</option>{% for v,l in status_choices %}<option value="{{ v }}" {% if v == f_status %}selected{% endif %}>{{ l }}</option>{% endfor %}</select>
+    <select class="form-select form-select-sm" style="width:170px" name="category" onchange="this.form.submit()"><option value="">Category</option>{% for c in categories %}<option {% if c == f_cat %}selected{% endif %}>{{ c }}</option>{% endfor %}</select>
+    <select class="form-select form-select-sm" style="width:120px" name="priority" onchange="this.form.submit()"><option value="">Priority</option><option {% if f_prio == 'Critical' %}selected{% endif %}>Critical</option><option {% if f_prio == 'High' %}selected{% endif %}>High</option><option {% if f_prio == 'Medium' %}selected{% endif %}>Medium</option><option {% if f_prio == 'Low' %}selected{% endif %}>Low</option></select>
+    <button class="btn btn-soft btn-sm"><i class="bi bi-funnel"></i></button></form></div>
+{% if page.object_list %}<div class="table-responsive"><table class="table table-gq">
+<thead><tr><th>#</th><th>Grievance</th><th>Category</th><th>Priority</th><th>SLA</th><th>Waiting</th><th>Status</th><th></th></tr></thead><tbody>
+{% for g in page %}<tr>
+  <td>{% if g.queue_position %}<span class="qpos {% if g.queue_position <= 3 %}top{% endif %}">{{ g.queue_position }}</span>{% else %}<span class="muted">–</span>{% endif %}</td>
+  <td style="max-width:300px"><a class="tid" href="{% url 'officers:manage' g.pk %}">{{ g.tracking_id }}</a>
+    <div>{{ g.subject|truncatechars:55 }}</div><div class="small muted"><i class="bi bi-geo-alt"></i> {{ g.location }}{% if g.recurrence_count %} · <i class="bi bi-files"></i> {{ g.recurrence_count }} similar{% endif %}</div></td>
+  <td class="small">{{ g.predicted_category }}<div class="muted">{{ g.category_confidence|pct }} conf.</div></td>
+  <td style="min-width:130px"><span class="badge-p {{ g.priority_css }}">{{ g.priority_label }}</span> <span class="small tabular">{{ g.priority_score|floatformat:0 }}</span>
+    <div class="pbar mt-1"><span class="{{ g.priority_css }}" style="width:{{ g.priority_score|floatformat:0 }}%"></span></div></td>
+  <td class="small tabular">{{ g.sla_deadline|date:"d M" }}<div class="{% if g.is_overdue %}overdue{% else %}muted{% endif %}">{{ g.days_to_sla|days_text }}</div></td>
+  <td class="small tabular">{{ g.waiting_days|floatformat:1 }} d</td>
+  <td><span class="badge-s {{ g.status_css }}">{{ g.get_status_display }}</span></td>
+  <td class="text-end"><a class="btn btn-soft btn-sm" href="{% url 'officers:manage' g.pk %}">Open</a></td></tr>{% endfor %}</tbody></table></div>
+{% if page.paginator.num_pages > 1 %}<div class="card-b"><nav><ul class="pagination mb-0 justify-content-center">
+  {% if page.has_previous %}<li class="page-item"><a class="page-link" href="?view={{ view }}&page={{ page.previous_page_number }}&q={{ q }}&status={{ f_status }}&category={{ f_cat }}&priority={{ f_prio }}{% if dept %}&dept={{ dept.code }}{% endif %}">Prev</a></li>{% endif %}
+  <li class="page-item active"><span class="page-link">{{ page.number }} / {{ page.paginator.num_pages }}</span></li>
+  {% if page.has_next %}<li class="page-item"><a class="page-link" href="?view={{ view }}&page={{ page.next_page_number }}&q={{ q }}&status={{ f_status }}&category={{ f_cat }}&priority={{ f_prio }}{% if dept %}&dept={{ dept.code }}{% endif %}">Next</a></li>{% endif %}</ul></nav></div>{% endif %}
+{% else %}<div class="empty"><i class="bi bi-inbox"></i><p class="mt-2 mb-0">{% if not dept and not is_admin %}No department is assigned to your account. Ask an administrator.{% else %}No grievances match these filters.{% endif %}</p></div>{% endif %}
+</div></div>{% endblock %}

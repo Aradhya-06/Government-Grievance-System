@@ -1,0 +1,22 @@
+{% extends "base.html" %}{% load ui %}{% block title %}Admin overview{% endblock %}
+{% block content %}<div class="container">
+<div class="page-head d-flex flex-wrap justify-content-between align-items-end gap-2"><div><span class="chip">Administrator</span><h1 class="mt-2">System overview</h1></div>
+  <div class="d-flex gap-2"><a class="btn btn-soft" href="{% url 'admin:index' %}"><i class="bi bi-gear"></i> Django admin</a><a class="btn btn-primary" href="{% url 'analytics:reports' %}"><i class="bi bi-bar-chart"></i> Full analytics</a></div></div>
+<div class="row g-3 mb-3">
+  <div class="col-6 col-lg-3"><div class="card-gq kpi"><div class="ico ico-navy"><i class="bi bi-inbox-fill"></i></div><div><div class="num">{{ stats.total }}</div><div class="lbl">Grievances</div></div></div></div>
+  <div class="col-6 col-lg-3"><div class="card-gq kpi"><div class="ico ico-saf"><i class="bi bi-hourglass-split"></i></div><div><div class="num">{{ stats.pending }}</div><div class="lbl">Pending</div></div></div></div>
+  <div class="col-6 col-lg-3"><div class="card-gq kpi"><div class="ico ico-red"><i class="bi bi-alarm-fill"></i></div><div><div class="num">{{ stats.overdue }}</div><div class="lbl">Past SLA</div></div></div></div>
+  <div class="col-6 col-lg-3"><div class="card-gq kpi"><div class="ico ico-teal"><i class="bi bi-check2-circle"></i></div><div><div class="num">{{ stats.resolved }}</div><div class="lbl">Resolved</div></div></div></div>
+  <div class="col-6 col-lg-3"><div class="card-gq kpi"><div class="ico ico-navy"><i class="bi bi-people-fill"></i></div><div><div class="num">{{ stats.citizens }}</div><div class="lbl">Citizens</div></div></div></div>
+  <div class="col-6 col-lg-3"><div class="card-gq kpi"><div class="ico ico-navy"><i class="bi bi-person-badge-fill"></i></div><div><div class="num">{{ stats.officers }}</div><div class="lbl">Officers</div></div></div></div>
+  <div class="col-6 col-lg-3"><div class="card-gq kpi"><div class="ico ico-red"><i class="bi bi-exclamation-octagon-fill"></i></div><div><div class="num">{{ stats.critical }}</div><div class="lbl">Critical pending</div></div></div></div>
+  <div class="col-6 col-lg-3"><div class="card-gq kpi"><div class="ico ico-saf"><i class="bi bi-flask"></i></div><div><div class="num">{{ stats.demo }}</div><div class="lbl">Demo records</div></div></div></div></div>
+<div class="card-gq mb-3"><div class="card-h"><h5>Departments</h5><span class="small muted">Open a department's queue from the officer view</span></div>
+<div class="table-responsive"><table class="table table-gq"><thead><tr><th>Department</th><th>Officers</th><th>Total</th><th>Pending</th><th>Past SLA</th><th>Resolved</th><th>Avg priority (pending)</th><th></th></tr></thead><tbody>
+{% for d in depts %}<tr><td><b>{{ d.name }}</b><div class="small muted tid">{{ d.code }}</div></td><td>{{ d.officers_available }}</td><td>{{ d.total }}</td><td>{{ d.pending }}</td>
+  <td class="{% if d.overdue %}overdue{% endif %}">{{ d.overdue }}</td><td>{{ d.resolved }}</td>
+  <td style="min-width:140px">{% if d.avg_priority %}<span class="tabular">{{ d.avg_priority|floatformat:0 }}</span><div class="pbar mt-1"><span class="{% if d.avg_priority >= 75 %}crit{% elif d.avg_priority >= 58 %}high{% elif d.avg_priority >= 35 %}med{% else %}low{% endif %}" style="width:{{ d.avg_priority|floatformat:0 }}%"></span></div>{% else %}<span class="muted">–</span>{% endif %}</td>
+  <td class="text-end"><a class="btn btn-soft btn-sm" href="{% url 'officers:dashboard' %}?dept={{ d.code }}">Queue</a></td></tr>{% endfor %}</tbody></table></div></div>
+<div class="card-gq"><div class="card-h"><h5>Recent GA optimisation runs</h5></div><div class="table-responsive"><table class="table table-gq table-sm"><thead><tr><th>When</th><th>Department</th><th>Items</th><th>Generations</th><th>Runtime</th><th>GA cost</th><th>Priority-sort cost</th><th>Δ cost</th></tr></thead><tbody>
+{% for r in runs %}<tr><td class="small">{{ r.run_at|date:"d M H:i" }}</td><td>{{ r.department.name|truncatechars:34 }}</td><td>{{ r.n_items }}</td><td>{{ r.generations }}</td><td>{{ r.runtime_s|floatformat:2 }} s</td><td class="tabular">{{ r.ga_cost|floatformat:0 }}</td><td class="tabular">{{ r.baseline_cost|floatformat:0 }}</td><td class="tabular">{{ r.cost_improvement_pct|floatformat:1 }}%</td></tr>{% empty %}<tr><td colspan="8" class="muted text-center py-4">No runs yet.</td></tr>{% endfor %}</tbody></table></div></div>
+</div>{% endblock %}

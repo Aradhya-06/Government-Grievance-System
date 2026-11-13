@@ -1,0 +1,66 @@
+{% load static %}<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}{{ SITE_NAME }}{% endblock %} · {{ SITE_NAME }}</title>
+  <meta name="description" content="{{ SITE_TAGLINE }}.">
+  <link rel="stylesheet" href="{% static 'vendor/bootstrap/bootstrap.min.css' %}">
+  <link rel="stylesheet" href="{% static 'vendor/icons/bootstrap-icons.min.css' %}">
+  <link rel="stylesheet" href="{% static 'css/app.css' %}">
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-gq">
+  <div class="container">
+    <a class="navbar-brand brand" href="{% url 'core:home' %}">
+      <span class="logo"><i class="bi bi-diagram-3-fill"></i></span>
+      <span>{{ SITE_NAME }}<small>Grievance intelligence</small></span>
+    </a>
+    <button class="navbar-toggler border-0" data-bs-toggle="collapse" data-bs-target="#nav"><i class="bi bi-list fs-3"></i></button>
+    <div class="collapse navbar-collapse" id="nav">
+      <ul class="navbar-nav me-auto ms-lg-3">
+        <li class="nav-item"><a class="nav-link {% if request.resolver_match.view_name == 'core:home' %}active{% endif %}" href="{% url 'core:home' %}">Home</a></li>
+        {% if user_role == 'citizen' %}
+          <li class="nav-item"><a class="nav-link {% if request.resolver_match.namespace == 'grievances' %}active{% endif %}" href="{% url 'grievances:dashboard' %}">My grievances</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'grievances:submit' %}">Submit</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'grievances:track' %}">Track</a></li>
+        {% elif user_role == 'officer' or user_role == 'admin' %}
+          <li class="nav-item"><a class="nav-link {% if request.resolver_match.namespace == 'officers' %}active{% endif %}" href="{% url 'officers:dashboard' %}">Officer queue</a></li>
+          <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'reports' %}active{% endif %}" href="{% url 'analytics:reports' %}">Analytics</a></li>
+          <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'playground' %}active{% endif %}" href="{% url 'analytics:playground' %}">Playground</a></li>
+          {% if user_role == 'admin' %}<li class="nav-item"><a class="nav-link" href="{% url 'analytics:admin_overview' %}">Admin overview</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'admin:index' %}">Django admin</a></li>{% endif %}
+        {% endif %}
+      </ul>
+      <div class="d-flex align-items-center gap-2">
+        {% if user.is_authenticated %}
+          <span class="d-none d-lg-inline muted small">{{ user.first_name|default:user.username }}</span>
+          <span class="role-chip">{{ user_role|default:"user" }}</span>
+          <form method="post" action="{% url 'accounts:logout' %}" class="m-0">{% csrf_token %}
+            <button class="btn btn-soft btn-sm"><i class="bi bi-box-arrow-right"></i> Sign out</button></form>
+        {% else %}
+          <a class="btn btn-soft btn-sm" href="{% url 'accounts:officer_login' %}"><i class="bi bi-shield-lock"></i> Officer login</a>
+          <a class="btn btn-soft btn-sm" href="{% url 'accounts:login' %}">Sign in</a>
+          <a class="btn btn-accent btn-sm" href="{% url 'accounts:register' %}">Register</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</nav>
+
+{% if messages %}<div class="container mt-3">{% for m in messages %}
+  <div class="alert alert-{% if m.tags == 'error' %}danger{% else %}{{ m.tags|default:'info' }}{% endif %} d-flex align-items-center gap-2 mb-2" role="alert">
+    <i class="bi bi-{% if m.tags == 'success' %}check-circle-fill{% elif m.tags == 'error' %}exclamation-triangle-fill{% else %}info-circle-fill{% endif %}"></i><div>{{ m }}</div></div>{% endfor %}</div>{% endif %}
+
+<main>{% block content %}{% endblock %}</main>
+
+<footer class="footer"><div class="container"><div class="row g-4">
+  <div class="col-md-5"><h6>{{ SITE_NAME }}</h6>
+    <p class="mb-0">{{ SITE_TAGLINE }}. Smart routing, explainable urgency scoring and optimised work queues for public-service teams.</p></div>
+  <div class="col-md-3"><h6>Explore</h6><div><a href="{% url 'accounts:officer_login' %}">Officer sign-in</a></div><div><a href="{% url 'accounts:register' %}">Citizen registration</a></div></div>
+  <div class="col-md-4"><h6>Notice</h6><p class="mb-0">{{ SITE_NAME }} is an independent platform and is not affiliated with any government body.</p></div>
+</div></div></footer>
+
+<script src="{% static 'vendor/bootstrap/bootstrap.bundle.min.js' %}"></script>
+{% block extra_js %}{% endblock %}
+</body></html>

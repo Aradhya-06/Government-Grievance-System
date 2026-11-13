@@ -1,0 +1,13 @@
+Django>=6.0,<7
+numpy
+pandas
+scipy
+scikit-learn
+scikit-fuzzy
+statsmodels
+nltk
+matplotlib
+seaborn
+plotly
+pdfplumber
+joblib

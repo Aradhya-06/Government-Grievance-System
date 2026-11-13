@@ -1,0 +1,48 @@
+{
+  "simulated_monthly": true,
+  "synthetic_text": true,
+  "charts": [
+    {
+      "file": "eda_monthly_trend.png",
+      "question": "Do disposals keep pace with receipts?",
+      "finding": "Overall disposal-to-receipt ratio across the period: 1.00."
+    },
+    {
+      "file": "eda_department_volume.png",
+      "question": "Which departments carry the highest load?",
+      "finding": "Highest total receipts: Department of Agriculture & Farmers Welfare."
+    },
+    {
+      "file": "eda_disposal_rate_box.png",
+      "question": "Which departments dispose consistently?",
+      "finding": "Boxes right of the dashed line clear more than they receive."
+    },
+    {
+      "file": "eda_seasonality_heatmap.png",
+      "question": "Is volume seasonal?",
+      "finding": "Darker cells = months with above-average receipts for that department."
+    },
+    {
+      "file": "eda_backlog_vs_rate.png",
+      "question": "Does backlog age/size relate to disposal performance?",
+      "finding": "Pearson r between backlog size and disposal rate = 0.16 over 10 departments (small sample - indicative only; this is backlog SIZE, not age)."
+    },
+    {
+      "file": "eda_category_distribution.png",
+      "question": "Is the training data balanced across categories?",
+      "finding": "14 categories, 40-44 complaints each."
+    },
+    {
+      "file": "eda_text_length.png",
+      "question": "How much text does the model see per complaint?",
+      "finding": "Median 19 words (min 12, max 35)."
+    }
+  ],
+  "unavailable": [
+    "State-wise grievance statistics (needs DARPG States/UTs report tables)",
+    "Pendency-age distribution (needs the 'pendency by age' tables)",
+    "Redressal-time distribution (needs per-grievance timestamps; restricted data)"
+  ],
+  "monthly_rows": 480,
+  "departments": 10
+}

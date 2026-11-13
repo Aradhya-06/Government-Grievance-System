@@ -1,0 +1,37 @@
+{% extends "base.html" %}{% load static %}{% block title %}Playground{% endblock %}
+{% block content %}<div class="container">
+<div class="page-head"><span class="chip">Try it live</span><h1 class="mt-2">Playground</h1><div class="muted small">Try the live priority engine and the complaint classifier with your own inputs.</div></div>
+<div class="row g-3"><div class="col-lg-6"><div class="card-gq"><div class="card-h"><h5><i class="bi bi-sliders"></i> Priority simulator</h5><span class="chip">Priority engine</span></div><div class="card-b">
+  <div class="mb-3"><label class="form-label d-flex justify-content-between">Severity <b id="v-sev">7</b></label><input type="range" class="form-range fz" id="f-sev" min="0" max="10" step="0.5" value="7"></div>
+  <div class="mb-3"><label class="form-label d-flex justify-content-between">Public impact <b id="v-imp">5</b></label><input type="range" class="form-range fz" id="f-imp" min="0" max="10" step="0.5" value="5"></div>
+  <div class="mb-3"><label class="form-label d-flex justify-content-between">Waiting time (days) <b id="v-wai">10</b></label><input type="range" class="form-range fz" id="f-wai" min="0" max="60" step="1" value="10"></div>
+  <div class="mb-3"><label class="form-label d-flex justify-content-between">SLA urgency <b id="v-sla">6</b></label><input type="range" class="form-range fz" id="f-sla" min="0" max="10" step="0.5" value="6"></div>
+  <div class="d-flex align-items-center gap-3 border-top pt-3"><div class="score-ring" id="ring" style="--p:0"><span id="score">–</span></div>
+    <div><span class="badge-p" id="plabel">–</span><div class="small muted mt-1">Centroid-defuzzified priority (0–100)</div></div></div>
+  <div class="small muted text-uppercase fw-bold mt-3 mb-1">Fired rules (strength)</div><div id="rules"></div></div></div></div>
+<div class="col-lg-6"><div class="card-gq"><div class="card-h"><h5><i class="bi bi-chat-square-text"></i> Complaint classifier</h5><span class="chip">Classifier</span></div><div class="card-b">
+  <label class="form-label">Type a complaint</label>
+  <textarea id="ctext" class="form-control" rows="4" placeholder="e.g. The transformer near our colony is sparking and there is no electricity since two days"></textarea>
+  <div class="d-flex flex-wrap gap-2 mt-2"><button class="btn btn-primary" id="cbtn"><i class="bi bi-cpu"></i> Classify</button>
+    <button class="btn btn-soft btn-sm ex">No water supply in our lane for a week</button><button class="btn btn-soft btn-sm ex">My pension has not been credited for three months</button><button class="btn btn-soft btn-sm ex">Garbage not collected and drain overflowing near market</button></div>
+  <div id="cout" class="mt-3"></div></div></div></div></div></div>{% endblock %}
+{% block extra_js %}<script>
+const $=id=>document.getElementById(id);
+const colors={Critical:'#b4232c',High:'#d9691a',Medium:'#d4a017',Low:'#2e8b57'};
+const cls={Critical:'crit',High:'high',Medium:'med',Low:'low'};
+let t;function run(){
+  $('v-sev').textContent=$('f-sev').value;$('v-imp').textContent=$('f-imp').value;$('v-wai').textContent=$('f-wai').value;$('v-sla').textContent=$('f-sla').value;
+  clearTimeout(t);t=setTimeout(()=>{
+  fetch(`{% url 'analytics:api_fuzzy' %}?severity=${$('f-sev').value}&impact=${$('f-imp').value}&waiting=${$('f-wai').value}&sla=${$('f-sla').value}`).then(r=>r.json()).then(d=>{
+    $('score').textContent=Math.round(d.score);$('ring').style.setProperty('--p',d.score);$('ring').style.setProperty('--ring',colors[d.label]);
+    $('plabel').textContent=d.label;$('plabel').className='badge-p '+cls[d.label];
+    $('rules').innerHTML=d.fired_rules.slice(0,6).map(r=>`<div class="rule-row"><span class="rule-str">${r.strength}</span><div><div>IF ${r.rule} → <b>${r.then}</b></div><div class="muted small">${r.why}</div></div></div>`).join('')||'<div class="muted small">No rule fired.</div>';});},120);}
+document.querySelectorAll('.fz').forEach(e=>e.addEventListener('input',run));run();
+function classify(){const v=$('ctext').value.trim();if(v.length<5){$('cout').innerHTML='<div class="field-error">Enter at least a short sentence.</div>';return;}
+  fetch(`{% url 'analytics:api_classify' %}?text=`+encodeURIComponent(v)).then(r=>r.json()).then(d=>{
+    if(d.error){$('cout').innerHTML=`<div class="field-error">${d.error}</div>`;return;}
+    $('cout').innerHTML=`<div class="fs-5 fw-bold">${d.category} <span class="muted fs-6">${Math.round(d.confidence*100)}%</span></div><div class="small muted mb-2">model: ${d.model}</div>`+
+    d.top3.map(x=>`<div class="mf-bar"><span class="lab" style="width:150px">${x.category}</span><span class="bar"><span style="width:${x.p*100}%"></span></span><span>${Math.round(x.p*100)}%</span></div>`).join('');});}
+$('cbtn').addEventListener('click',classify);
+document.querySelectorAll('.ex').forEach(b=>b.addEventListener('click',()=>{$('ctext').value=b.textContent;classify();}));
+</script>{% endblock %}

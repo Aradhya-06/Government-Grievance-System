@@ -1,0 +1,5 @@
+{% load ui %}
+{% if form.non_field_errors %}<div class="alert alert-danger py-2">{% for e in form.non_field_errors %}{{ e }}{% endfor %}</div>{% endif %}
+{% for f in form %}<div class="mb-3"><label class="form-label" for="{{ f.id_for_label }}">{{ f.label }}</label>
+  {{ f|add_class:"form-control" }}{% if f.help_text %}<div class="help">{{ f.help_text|safe }}</div>{% endif %}
+  {% for e in f.errors %}<div class="field-error">{{ e }}</div>{% endfor %}</div>{% endfor %}

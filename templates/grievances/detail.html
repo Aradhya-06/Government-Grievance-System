@@ -1,0 +1,30 @@
+{% extends "base.html" %}{% block title %}{{ g.tracking_id }}{% endblock %}
+{% block content %}<div class="container"><div class="page-head d-flex flex-wrap justify-content-between align-items-end gap-2">
+  <div><a class="small" href="{% url 'grievances:dashboard' %}"><i class="bi bi-arrow-left"></i> My grievances</a>
+    <h1 class="mt-1">{{ g.subject }}</h1><span class="tid">{{ g.tracking_id }}</span> · <span class="badge-s {{ g.status_css }}">{{ g.get_status_display }}</span></div>
+  <div class="text-end small muted">Submitted {{ g.submitted_at|date:"d M Y, H:i" }}</div></div>
+<div class="card-gq card-b mb-3">
+  {% with s=g.status %}<div class="tracker">
+    <div class="st on {% if s == 'submitted' %}cur{% endif %}"><i><span class="bi bi-inbox"></span></i>Submitted</div>
+    <div class="st {% if s != 'submitted' %}on{% endif %} {% if s == 'under_review' %}cur{% endif %}"><i class="bi bi-search"></i>Under review</div>
+    <div class="st {% if s == 'in_progress' or s == 'resolved' %}on{% endif %} {% if s == 'in_progress' %}cur{% endif %}"><i class="bi bi-tools"></i>In progress</div>
+    <div class="st {% if s == 'resolved' or s == 'rejected' %}on{% endif %} {% if s == 'resolved' or s == 'rejected' %}cur{% endif %}"><i class="bi bi-flag"></i>{% if s == 'rejected' %}Closed{% else %}Resolved{% endif %}</div></div>{% endwith %}</div>
+<div class="row g-3"><div class="col-lg-7">
+  <div class="card-gq mb-3"><div class="card-h"><h5>Complaint</h5></div><div class="card-b"><p style="white-space:pre-line">{{ g.description }}</p>
+    <div class="row small muted g-2"><div class="col-sm-6"><i class="bi bi-geo-alt"></i> {{ g.location }}</div><div class="col-sm-6"><i class="bi bi-people"></i> ~{{ g.affected_people }} people affected</div></div></div></div>
+  <div class="card-gq"><div class="card-h"><h5>Action history</h5><span class="chip">{{ history|length }} entr{{ history|length|pluralize:"y,ies" }}</span></div><div class="card-b">
+    <ul class="tl">{% for h in history %}<li class="{% if h.to_status == 'resolved' %}done{% endif %}">
+      <div class="fw-semibold">{{ h.to_status|cut:"_"|title }}{% if h.from_status %} <span class="muted small">← {{ h.from_status|cut:"_" }}</span>{% endif %}</div>
+      {% if h.remarks %}<div class="small">{{ h.remarks }}</div>{% endif %}
+      <div class="when">{{ h.created_at|date:"d M Y, H:i" }}{% if h.actor %} · <span class="who">{% if h.actor_id == g.citizen_id %}You{% else %}Officer {{ h.actor.first_name|default:h.actor.username }}{% endif %}</span>{% endif %}</div></li>{% endfor %}</ul></div></div></div>
+<div class="col-lg-5">
+  <div class="card-gq mb-3"><div class="card-h"><h5>Processing details</h5></div><div class="card-b small">
+    <div class="d-flex justify-content-between py-1"><span class="muted">Category</span><b>{{ g.predicted_category }}</b></div>
+    <div class="d-flex justify-content-between py-1"><span class="muted">Department</span><b class="text-end">{{ g.department.name }}</b></div>
+    <div class="d-flex justify-content-between py-1"><span class="muted">Urgency</span><span class="badge-p {{ g.priority_css }}">{{ g.priority_label }}</span></div>
+    <div class="d-flex justify-content-between py-1"><span class="muted">Waiting time</span><b>{{ g.waiting_days|floatformat:1 }} days</b></div>
+    <div class="d-flex justify-content-between py-1"><span class="muted">Target date (SLA)</span><b class="{% if g.is_overdue %}overdue{% endif %}">{{ g.sla_deadline|date:"d M Y" }}</b></div>
+    {% if g.is_pending and g.queue_position %}<div class="d-flex justify-content-between py-1"><span class="muted">Position in department queue</span><b>#{{ g.queue_position }}</b></div>{% endif %}
+    {% if g.resolved_at %}<div class="d-flex justify-content-between py-1"><span class="muted">Resolved on</span><b>{{ g.resolved_at|date:"d M Y" }}</b></div>{% endif %}</div></div>
+  {% if g.recurrence_count %}<div class="demo-banner"><i class="bi bi-people"></i> {{ g.recurrence_count }} similar complaint{{ g.recurrence_count|pluralize }} on record — this raises the issue's public-impact score.</div>{% endif %}
+</div></div></div>{% endblock %}

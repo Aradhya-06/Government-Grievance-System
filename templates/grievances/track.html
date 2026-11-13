@@ -1,0 +1,6 @@
+{% extends "base.html" %}{% load ui %}{% block title %}Track grievance{% endblock %}
+{% block content %}<div class="container"><div class="row justify-content-center"><div class="col-lg-6">
+<div class="page-head text-center"><span class="chip">Track</span><h1 class="mt-2">Track a grievance</h1><p class="muted">Enter the tracking ID you received when you submitted it.</p></div>
+<div class="card-gq card-b"><form method="get" novalidate><label class="form-label">Tracking ID</label>
+  <div class="input-group">{{ form.tracking_id|add_class:"form-control form-control-lg" }}<button class="btn btn-primary px-4">Track</button></div>
+  {% for e in form.tracking_id.errors %}<div class="field-error">{{ e }}</div>{% endfor %}</form></div></div></div></div>{% endblock %}

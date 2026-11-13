@@ -1,0 +1,69 @@
+{% extends "base.html" %}{% block title %}Home{% endblock %}
+{% block content %}
+<section class="hero"><div class="container"><div class="row align-items-center g-5">
+  <div class="col-lg-7">
+    <h1>Grievances that are <em>understood</em>, <em>prioritised</em> and <em>scheduled</em>, not just stored.</h1>
+    <!-- <p class="lead mt-3">{{ SITE_NAME }} classifies every complaint with NLP, finds recurring issues, scores urgency with a transparent
+      fuzzy rule base, and uses a genetic algorithm to decide which grievance an officer should handle next.</p> -->
+    <div class="d-flex flex-wrap gap-2 mt-4">
+      {% if user_role == 'citizen' %}<a href="{% url 'grievances:submit' %}" class="btn btn-accent btn-lg"><i class="bi bi-pencil-square"></i> Submit a grievance</a>
+      {% elif user_role == 'officer' or user_role == 'admin' %}<a href="{% url 'officers:dashboard' %}" class="btn btn-accent btn-lg"><i class="bi bi-list-ol"></i> Open officer queue</a>
+      {% else %}<a href="{% url 'accounts:register' %}" class="btn btn-accent btn-lg">Register as citizen</a>
+        <a href="{% url 'accounts:officer_login' %}" class="btn btn-lg" style="background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.25)"><i class="bi bi-shield-lock"></i> Officer login</a>{% endif %}
+    </div>
+  </div>
+  <!-- 
+  <div class="col-lg-5"><div class="hero-card">
+    <div class="small text-white-50 mb-2 text-uppercase fw-bold" style="letter-spacing:.08em">Example: an optimised queue</div>
+    <div class="row-q"><span class="n">1</span><div class="flex-grow-1">Live wire hanging near school gate<div class="small text-white-50">Electricity · priority 88 · SLA in 0.4 d</div></div><span class="badge-p crit">Critical</span></div>
+    <div class="row-q"><span class="n">2</span><div class="flex-grow-1">No water for 6 days, 400 households<div class="small text-white-50">Water supply · priority 79 · SLA overdue</div></div><span class="badge-p crit">Critical</span></div>
+    <div class="row-q"><span class="n">3</span><div class="flex-grow-1">Pension credit pending since March<div class="small text-white-50">Pension · priority 61 · SLA in 6 d</div></div><span class="badge-p high">High</span></div>
+    <div class="row-q"><span class="n">4</span><div class="flex-grow-1">Birth certificate spelling error<div class="small text-white-50">Documentation · priority 28 · SLA in 12 d</div></div><span class="badge-p low">Low</span></div>
+    <div class="small text-white-50 mt-2">Sample view — the live queue is in the officer dashboard.</div>
+  </div></div>-->
+</div></div></section>
+<!--
+<div class="container stat-strip"><div class="row g-3">
+  <div class="col-6 col-md-3"><div class="card-gq kpi"><div class="ico ico-navy"><i class="bi bi-inbox-fill"></i></div><div><div class="num">{{ stats.total }}</div><div class="lbl">Grievances</div></div></div></div>
+  <div class="col-6 col-md-3"><div class="card-gq kpi"><div class="ico ico-saf"><i class="bi bi-hourglass-split"></i></div><div><div class="num">{{ stats.pending }}</div><div class="lbl">In queue</div></div></div></div>
+  <div class="col-6 col-md-3"><div class="card-gq kpi"><div class="ico ico-teal"><i class="bi bi-check2-circle"></i></div><div><div class="num">{{ stats.resolved }}</div><div class="lbl">Resolved</div></div></div></div>
+  <div class="col-6 col-md-3"><div class="card-gq kpi"><div class="ico ico-red"><i class="bi bi-diagram-2-fill"></i></div><div><div class="num">{{ n_rules }}</div><div class="lbl">Priority rules</div></div></div></div>
+</div></div>-->
+
+<section class="container mt-5">
+  <div class="text-center mb-4"><span class="chip">The pipeline</span><h2 class="mt-2">From complaint to optimised queue in five steps</h2></div>
+  <div class="row g-3">
+    <div class="col-md"><div class="card-gq step"><div class="no">Step 1</div><h6>Citizen submits</h6><p class="small muted mb-2">Subject, description, location and people affected are validated and stored with a unique tracking ID.</p><span class="tag">Tracking ID</span><span class="tag">Validated</span></div></div>
+    <div class="col-md"><div class="card-gq step"><div class="no">Step 2</div><h6>Smart classification</h6><p class="small muted mb-2">The complaint text is read automatically; its category is predicted and it is routed to the right department.</p><span class="tag">Auto-routing</span></div></div>
+    <div class="col-md"><div class="card-gq step"><div class="no">Step 3</div><h6>Recurring-issue check</h6><p class="small muted mb-2">Similar complaints from the same area are linked to reveal recurring issues nothing is auto-rejected.</p><span class="tag">Never auto-rejected</span></div></div>
+    <div class="col-md"><div class="card-gq step"><div class="no">Step 4</div><h6>Urgency scoring</h6><p class="small muted mb-2">Severity, public impact, waiting time and SLA urgency are combined by a transparent rule base every score can be explained.</p><span class="tag">Explainable</span></div></div>
+    <div class="col-md"><div class="card-gq step"><div class="no">Step 5</div><h6>Optimised queue</h6><p class="small muted mb-2">The queue is re-ordered under officer capacity and SLA deadlines, every time something changes.</p><span class="tag">SLA-aware</span></div></div>
+  </div>
+</section>
+
+<section class="container mt-5">
+  <div class="text-center mb-4"><span class="chip">Built for every role</span><h2 class="mt-2">One platform, three experiences</h2></div>
+  <div class="row g-3">
+    <div class="col-md-4"><div class="card-gq card-b h-100 feat"><div class="ico ico-navy mb-3"><i class="bi bi-person-heart"></i></div><h5>Citizens</h5>
+      <ul class="feat-list"><li>Register a grievance in under a minute</li><li>Unique tracking ID and live status timeline</li><li>See every officer action and remark</li><li>Your data is visible only to you</li></ul></div></div>
+    <div class="col-md-4"><div class="card-gq card-b h-100 feat"><div class="ico ico-saf mb-3"><i class="bi bi-person-workspace"></i></div><h5>Officers</h5>
+      <ul class="feat-list"><li>A department queue already in the best order</li><li>Priority score with the reasons behind it</li><li>SLA deadlines and waiting time at a glance</li><li>Recurring issues flagged automatically</li></ul></div></div>
+    <div class="col-md-4"><div class="card-gq card-b h-100 feat"><div class="ico ico-teal mb-3"><i class="bi bi-bar-chart-line-fill"></i></div><h5>Administrators</h5>
+      <ul class="feat-list"><li>Department-wise load, backlog and SLA breaches</li><li>Trend analysis and next-month volume forecasts</li><li>Model and scheduling performance reports</li><li>Full control of users and departments</li></ul></div></div>
+  </div>
+</section>
+
+<section class="container mt-5"><div class="row g-3">
+  <div class="col-md-3 col-6"><div class="card-gq card-b h-100 text-center"><div class="fs-2 fw-bold" style="color:var(--navy-700)">14</div><div class="small muted">service categories understood automatically</div></div></div>
+  <div class="col-md-3 col-6"><div class="card-gq card-b h-100 text-center"><div class="fs-2 fw-bold" style="color:var(--navy-700)">4</div><div class="small muted">factors in every urgency score</div></div></div>
+  <div class="col-md-3 col-6"><div class="card-gq card-b h-100 text-center"><div class="fs-2 fw-bold" style="color:var(--navy-700)">100%</div><div class="small muted">of scores come with a stated reason</div></div></div>
+  <div class="col-md-3 col-6"><div class="card-gq card-b h-100 text-center"><div class="fs-2 fw-bold" style="color:var(--navy-700)">0</div><div class="small muted">complaints rejected for being similar</div></div></div>
+</div></section>
+
+<!-- 
+<section class="container mt-5"><div class="cta-band">
+  <div><h3 class="mb-1">Ready to raise or resolve a grievance?</h3><p class="mb-0">Classification, urgency scoring and queue optimisation, all in one place.</p></div>
+  <div class="d-flex gap-2 flex-wrap">{% if not user.is_authenticated %}<a class="btn btn-accent btn-lg" href="{% url 'accounts:register' %}">Get started</a>{% endif %}</div>
+</div></section>
+-->
+{% endblock %}

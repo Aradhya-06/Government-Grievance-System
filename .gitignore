@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+db.sqlite3
+staticfiles/
+ml/data/raw/*.csv
+ml/data/raw/darpg_pdfs/
+.venv/

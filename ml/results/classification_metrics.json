@@ -1,0 +1,153 @@
+{
+  "selected": "Linear SVM",
+  "n_samples": 591,
+  "n_classes": 14,
+  "synthetic_data": true,
+  "data_note": "SYNTHETIC illustrative corpus - optimistic estimate",
+  "models": {
+    "Naive Bayes": {
+      "cv_accuracy_mean": 0.9915254237288135,
+      "cv_accuracy_std": 0.005359792644353171,
+      "cv_f1_macro_mean": 0.9917333775615511,
+      "cv_f1_macro_std": 0.005346872672206798,
+      "test_accuracy": 0.9915966386554622,
+      "test_precision_macro": 0.9928571428571429,
+      "test_recall_macro": 0.9920634920634921,
+      "test_f1_macro": 0.9920389208314905,
+      "train_time_s": 0.17
+    },
+    "Logistic Regression": {
+      "cv_accuracy_mean": 0.9949152542372882,
+      "cv_accuracy_std": 0.006779661016949135,
+      "cv_f1_macro_mean": 0.995029854046882,
+      "cv_f1_macro_std": 0.006710101710738393,
+      "test_accuracy": 0.9915966386554622,
+      "test_precision_macro": 0.9928571428571429,
+      "test_recall_macro": 0.9920634920634921,
+      "test_f1_macro": 0.9920389208314905,
+      "train_time_s": 0.76
+    },
+    "Linear SVM": {
+      "cv_accuracy_mean": 0.9949152542372882,
+      "cv_accuracy_std": 0.006779661016949135,
+      "cv_f1_macro_mean": 0.9951183104820875,
+      "cv_f1_macro_std": 0.006553476127348494,
+      "test_accuracy": 1.0,
+      "test_precision_macro": 1.0,
+      "test_recall_macro": 1.0,
+      "test_f1_macro": 1.0,
+      "train_time_s": 1.0
+    },
+    "MLP (ANN)": {
+      "cv_accuracy_mean": 0.9949152542372882,
+      "cv_accuracy_std": 0.006779661016949135,
+      "cv_f1_macro_mean": 0.995029854046882,
+      "cv_f1_macro_std": 0.006710101710738393,
+      "test_accuracy": 1.0,
+      "test_precision_macro": 1.0,
+      "test_recall_macro": 1.0,
+      "test_f1_macro": 1.0,
+      "train_time_s": 8.57
+    }
+  },
+  "per_class": [
+    {
+      "category": "Banking & Finance",
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 8
+    },
+    {
+      "category": "Documentation",
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 9
+    },
+    {
+      "category": "Education",
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 9
+    },
+    {
+      "category": "Electricity",
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 8
+    },
+    {
+      "category": "Healthcare",
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 9
+    },
+    {
+      "category": "Pension",
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 8
+    },
+    {
+      "category": "Police & Public Safety",
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 9
+    },
+    {
+      "category": "Public Distribution",
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 8
+    },
+    {
+      "category": "Railways",
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 8
+    },
+    {
+      "category": "Roads & Infrastructure",
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 8
+    },
+    {
+      "category": "Sanitation & Garbage",
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 9
+    },
+    {
+      "category": "Taxation",
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 8
+    },
+    {
+      "category": "Telecom & Postal",
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 9
+    },
+    {
+      "category": "Water Supply",
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 9
+    }
+  ]
+}

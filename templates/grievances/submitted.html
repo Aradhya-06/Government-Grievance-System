@@ -1,0 +1,17 @@
+{% extends "base.html" %}{% load ui %}{% block title %}Grievance registered{% endblock %}
+{% block content %}<div class="container py-4"><div class="row justify-content-center"><div class="col-lg-8">
+<div class="card-gq card-b text-center"><div class="ico ico-teal mx-auto mb-3" style="width:64px;height:64px;border-radius:50%;display:grid;place-items:center;font-size:2rem"><i class="bi bi-check2"></i></div>
+  <h2>Grievance registered</h2><p class="muted">Keep your tracking ID to follow progress.</p>
+  <div class="tid fs-3 my-2" style="letter-spacing:.06em">{{ g.tracking_id }}</div>
+  <div class="row g-3 text-start mt-3">
+    <div class="col-md-6"><div class="card-gq card-b h-100"><div class="small muted text-uppercase fw-bold">Detected category</div>
+      <div class="fs-5 fw-bold">{{ g.predicted_category }}</div><div class="small muted">Model confidence {{ g.category_confidence|pct }}</div></div></div>
+    <div class="col-md-6"><div class="card-gq card-b h-100"><div class="small muted text-uppercase fw-bold">Routed to</div>
+      <div class="fs-5 fw-bold">{{ g.department.name }}</div><div class="small muted">Target resolution within {{ g.sla_days }} days · by {{ g.sla_deadline|date:"d M Y" }}</div></div></div>
+    <div class="col-md-6"><div class="card-gq card-b h-100"><div class="small muted text-uppercase fw-bold">Urgency assessment</div>
+      <span class="badge-p {{ g.priority_css }} fs-6">{{ g.priority_label }}</span> <span class="muted small">fuzzy score {{ g.priority_score|floatformat:0 }}/100</span></div></div>
+    <div class="col-md-6"><div class="card-gq card-b h-100"><div class="small muted text-uppercase fw-bold">Similar complaints on record</div>
+      <div class="fs-5 fw-bold">{{ n_similar }}</div><div class="small muted">{% if n_similar %}Others have reported related issues. Your grievance is still registered separately.{% else %}No similar earlier complaints found.{% endif %}</div></div></div>
+  </div>
+  <div class="mt-4 d-flex gap-2 justify-content-center"><a class="btn btn-primary" href="{% url 'grievances:detail' g.tracking_id %}">Track this grievance</a>
+    <a class="btn btn-soft" href="{% url 'grievances:dashboard' %}">My dashboard</a></div></div></div></div></div>{% endblock %}

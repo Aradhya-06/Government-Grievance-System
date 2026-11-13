@@ -1,0 +1,18 @@
+{% extends "base.html" %}{% load ui %}{% block title %}Submit grievance{% endblock %}
+{% block content %}<div class="container"><div class="page-head"><span class="chip">Step 1 · Citizen</span><h1 class="mt-2">Submit a grievance</h1></div>
+<div class="row g-4"><div class="col-lg-8"><div class="card-gq card-b">
+<form method="post" novalidate>{% csrf_token %}
+  {% if form.non_field_errors %}<div class="alert alert-danger">{{ form.non_field_errors }}</div>{% endif %}
+  <div class="mb-3"><label class="form-label">{{ form.subject.label }}</label>{{ form.subject|add_class:"form-control" }}{% for e in form.subject.errors %}<div class="field-error">{{ e }}</div>{% endfor %}</div>
+  <div class="mb-3"><label class="form-label">{{ form.description.label }}</label>{{ form.description|add_class:"form-control" }}{% for e in form.description.errors %}<div class="field-error">{{ e }}</div>{% endfor %}
+    <div class="help">The more detail you give, the better the automatic routing and prioritisation.</div></div>
+  <div class="row g-3"><div class="col-md-7"><label class="form-label">{{ form.location.label }}</label>{{ form.location|add_class:"form-control" }}{% for e in form.location.errors %}<div class="field-error">{{ e }}</div>{% endfor %}</div>
+    <div class="col-md-5"><label class="form-label">{{ form.affected_people.label }}</label>{{ form.affected_people|add_class:"form-control" }}{% for e in form.affected_people.errors %}<div class="field-error">{{ e }}</div>{% endfor %}</div></div>
+  <div class="d-flex gap-2 mt-4"><button class="btn btn-accent px-4"><i class="bi bi-send"></i> Submit grievance</button><a class="btn btn-soft" href="{% url 'grievances:dashboard' %}">Cancel</a></div>
+</form></div></div>
+<div class="col-lg-4"><div class="card-gq card-b"><h6><i class="bi bi-lightbulb text-warning"></i> What happens next</h6>
+  <ol class="small muted ps-3 mb-0"><li class="mb-2">Your text is analysed and the <b>category</b> and <b>department</b> are predicted.</li>
+  <li class="mb-2">We check whether <b>similar complaints</b> already exist (yours is never rejected for that).</li>
+  <li class="mb-2">A <b>fuzzy urgency score</b> is computed from severity, impact, waiting time and SLA.</li>
+  <li>The department's queue is <b>re-ordered</b> by a genetic algorithm.</li></ol>
+  <hr><p class="small muted mb-0"><i class="bi bi-shield-check"></i> Please avoid entering sensitive personal information beyond what is needed.</p></div></div></div></div>{% endblock %}

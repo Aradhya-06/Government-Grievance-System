@@ -1,0 +1,36 @@
+{% extends "base.html" %}{% load ui %}{% block title %}{{ g.tracking_id }}{% endblock %}
+{% block content %}<div class="container">
+<div class="page-head d-flex flex-wrap justify-content-between align-items-end gap-2">
+  <div><a class="small" href="{% url 'officers:dashboard' %}"><i class="bi bi-arrow-left"></i> Queue</a>
+    <h1 class="mt-1">{{ g.subject }}</h1><span class="tid">{{ g.tracking_id }}</span> · <span class="badge-s {{ g.status_css }}">{{ g.get_status_display }}</span>
+    · <span class="badge-p {{ g.priority_css }}">{{ g.priority_label }} {{ g.priority_score|floatformat:0 }}</span></div>
+  {% if g.queue_position %}<div class="text-end"><div class="small muted text-uppercase fw-bold">Optimised position</div><span class="qpos top fs-4" style="width:52px;height:52px;border-radius:14px">{{ g.queue_position }}</span></div>{% endif %}</div>
+<div class="row g-3"><div class="col-lg-7">
+  <div class="card-gq mb-3"><div class="card-h"><h5>Complaint</h5><span class="small muted">by {{ g.citizen.first_name|default:g.citizen.username }}</span></div><div class="card-b">
+    <p style="white-space:pre-line">{{ g.description }}</p>
+    <div class="row g-2 small"><div class="col-sm-4"><span class="muted">Location</span><br><b>{{ g.location }}</b></div>
+    <div class="col-sm-4"><span class="muted">People affected</span><br><b>~{{ g.affected_people }}</b></div>
+    <div class="col-sm-4"><span class="muted">Submitted</span><br><b>{{ g.submitted_at|date:"d M Y, H:i" }}</b></div>
+    <div class="col-sm-4"><span class="muted">SLA deadline</span><br><b class="{% if g.is_overdue %}overdue{% endif %}">{{ g.sla_deadline|date:"d M Y" }} ({{ g.days_to_sla|days_text }})</b></div>
+    <div class="col-sm-4"><span class="muted">Waiting</span><br><b>{{ g.waiting_days|floatformat:1 }} days</b></div>
+    <div class="col-sm-4"><span class="muted">Predicted category</span><br><b>{{ g.predicted_category }}</b> <span class="muted">({{ g.category_confidence|pct }})</span></div></div></div></div>
+  <div class="card-gq mb-3"><div class="card-h"><h5>Update status</h5></div><div class="card-b">
+    <form method="post" novalidate>{% csrf_token %}{% if form.non_field_errors %}<div class="alert alert-danger py-2">{{ form.non_field_errors }}</div>{% endif %}
+    <div class="row g-3"><div class="col-md-4"><label class="form-label">New status</label>{{ form.status|add_class:"form-select" }}</div>
+    <div class="col-md-8"><label class="form-label">Remarks</label>{{ form.remarks|add_class:"form-control" }}{% for e in form.remarks.errors %}<div class="field-error">{{ e }}</div>{% endfor %}</div></div>
+    <button class="btn btn-primary mt-3"><i class="bi bi-check2"></i> Save &amp; re-optimise queue</button></form></div></div>
+  <div class="card-gq"><div class="card-h"><h5>Action history</h5></div><div class="card-b"><ul class="tl">{% for h in history %}<li class="{% if h.to_status == 'resolved' %}done{% endif %}">
+    <div class="fw-semibold">{{ h.to_status|cut:"_"|title }}</div>{% if h.remarks %}<div class="small">{{ h.remarks }}</div>{% endif %}
+    <div class="when">{{ h.created_at|date:"d M Y, H:i" }}{% if h.actor %} · <span class="who">{{ h.actor.first_name|default:h.actor.username }}</span>{% endif %}</div></li>{% endfor %}</ul></div></div></div>
+<div class="col-lg-5">
+  <div class="card-gq mb-3"><div class="card-h"><h5><i class="bi bi-diagram-2"></i> Why this priority? (fuzzy trace)</h5></div><div class="card-b">
+    <div class="d-flex align-items-center gap-3 mb-3"><div class="score-ring" style="--p:{{ g.priority_score|floatformat:0 }};--ring:{% if g.priority_label == 'Critical' %}#b4232c{% elif g.priority_label == 'High' %}#d9691a{% elif g.priority_label == 'Medium' %}#d4a017{% else %}#2e8b57{% endif %}"><span>{{ g.priority_score|floatformat:0 }}</span></div>
+      <div class="small"><div>Severity <b>{{ g.severity|floatformat:1 }}</b>/10</div><div>Public impact <b>{{ g.public_impact|floatformat:1 }}</b>/10</div>
+      <div>Waiting <b>{{ fz_inputs.waiting|floatformat:1 }}</b> d</div><div>SLA urgency <b>{{ fz_inputs.sla_urgency|floatformat:1 }}</b>/10</div></div></div>
+    <div class="small muted text-uppercase fw-bold mb-1">Top fired rules</div>
+    {% for r in fired %}<div class="rule-row"><span class="rule-str">{{ r.strength }}</span><div><div>IF {{ r.rule }} → <b>{{ r.then }}</b></div><div class="muted small">{{ r.why }}</div></div></div>{% empty %}<div class="muted small">No rule trace stored.</div>{% endfor %}</div></div>
+  <div class="card-gq"><div class="card-h"><h5><i class="bi bi-files"></i> Similar / recurring complaints</h5><span class="chip">{{ similar_rows|length }}</span></div><div class="card-b">
+    {% for s in similar_rows %}<div class="rule-row"><span class="rule-str">{{ s.similarity|floatformat:2 }}</span><div><a href="{% url 'officers:manage' s.g.pk %}"><b>{{ s.g.tracking_id }}</b></a>
+      <span class="badge-s {{ s.g.status_css }}">{{ s.g.get_status_display }}</span><div class="small muted">{{ s.g.subject|truncatechars:50 }} · {{ s.kind }}</div></div></div>
+    {% empty %}<div class="muted small">No similar earlier complaints.</div>{% endfor %}</div></div>
+</div></div></div>{% endblock %}

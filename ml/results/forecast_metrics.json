@@ -1,0 +1,306 @@
+{
+  "simulated_data": true,
+  "test_months": 6,
+  "min_arima_points": 36,
+  "note": "SIMULATED monthly data - for demonstration only",
+  "average": {
+    "ARIMA(1,1,1)": {
+      "mae": 113.46364506206132,
+      "rmse": 130.753175599485,
+      "n_departments": 10
+    },
+    "Linear regression": {
+      "mae": 128.61322463768118,
+      "rmse": 149.5694933986893,
+      "n_departments": 10
+    },
+    "Moving average (3)": {
+      "mae": 115.17222222222222,
+      "rmse": 137.09417810447079,
+      "n_departments": 10
+    },
+    "Naive": {
+      "mae": 116.96666666666667,
+      "rmse": 138.37907699709504,
+      "n_departments": 10
+    }
+  },
+  "best_model_counts": {
+    "ARIMA(1,1,1)": 3,
+    "Linear regression": 2,
+    "Moving average (3)": 3,
+    "Naive": 2
+  },
+  "departments": [
+    {
+      "department": "Department of Agriculture & Farmers Welfare",
+      "n_months": 48,
+      "models": {
+        "Naive": {
+          "mae": 211.16666666666666,
+          "rmse": 235.4247933700555
+        },
+        "Moving average (3)": {
+          "mae": 140.44444444444443,
+          "rmse": 178.12178522115246
+        },
+        "Linear regression": {
+          "mae": 225.45350241545898,
+          "rmse": 256.6189997996321
+        },
+        "ARIMA(1,1,1)": {
+          "mae": 180.91247682771998,
+          "rmse": 198.87720603910793
+        }
+      },
+      "best": "Moving average (3)",
+      "next_month": "2026-11",
+      "next_month_forecast": 2136,
+      "last_actual": 2323,
+      "arima_used": true
+    },
+    {
+      "department": "Department of Financial Services (Banking Division)",
+      "n_months": 48,
+      "models": {
+        "Naive": {
+          "mae": 86.66666666666667,
+          "rmse": 98.68974955215292
+        },
+        "Moving average (3)": {
+          "mae": 112.66666666666667,
+          "rmse": 133.83143073229044
+        },
+        "Linear regression": {
+          "mae": 132.18176328502412,
+          "rmse": 162.1608898659319
+        },
+        "ARIMA(1,1,1)": {
+          "mae": 87.17076604567978,
+          "rmse": 101.39903170167129
+        }
+      },
+      "best": "Naive",
+      "next_month": "2026-11",
+      "next_month_forecast": 1814,
+      "last_actual": 1814,
+      "arima_used": true
+    },
+    {
+      "department": "Department of Food & Public Distribution",
+      "n_months": 48,
+      "models": {
+        "Naive": {
+          "mae": 41.0,
+          "rmse": 48.23898838076935
+        },
+        "Moving average (3)": {
+          "mae": 27.44444444444444,
+          "rmse": 32.80243893371345
+        },
+        "Linear regression": {
+          "mae": 32.452898550724626,
+          "rmse": 36.97322867604827
+        },
+        "ARIMA(1,1,1)": {
+          "mae": 35.72809653407969,
+          "rmse": 39.629471572085755
+        }
+      },
+      "best": "Moving average (3)",
+      "next_month": "2026-11",
+      "next_month_forecast": 471,
+      "last_actual": 473,
+      "arima_used": true
+    },
+    {
+      "department": "Department of Health & Family Welfare",
+      "n_months": 48,
+      "models": {
+        "Naive": {
+          "mae": 108.5,
+          "rmse": 138.42868199907127
+        },
+        "Moving average (3)": {
+          "mae": 87.44444444444444,
+          "rmse": 116.633963670457
+        },
+        "Linear regression": {
+          "mae": 85.01871980676333,
+          "rmse": 96.7705648665191
+        },
+        "ARIMA(1,1,1)": {
+          "mae": 90.67075391207099,
+          "rmse": 105.04658989410872
+        }
+      },
+      "best": "Linear regression",
+      "next_month": "2026-11",
+      "next_month_forecast": 876,
+      "last_actual": 790,
+      "arima_used": true
+    },
+    {
+      "department": "Department of Higher Education",
+      "n_months": 48,
+      "models": {
+        "Naive": {
+          "mae": 70.16666666666667,
+          "rmse": 74.84316936100448
+        },
+        "Moving average (3)": {
+          "mae": 54.27777777777777,
+          "rmse": 60.52624163060123
+        },
+        "Linear regression": {
+          "mae": 64.52053140096619,
+          "rmse": 67.80957256811206
+        },
+        "ARIMA(1,1,1)": {
+          "mae": 62.946953269287725,
+          "rmse": 68.34531970721075
+        }
+      },
+      "best": "Moving average (3)",
+      "next_month": "2026-11",
+      "next_month_forecast": 904,
+      "last_actual": 848,
+      "arima_used": true
+    },
+    {
+      "department": "Department of Pension & Pensioners' Welfare",
+      "n_months": 48,
+      "models": {
+        "Naive": {
+          "mae": 138.5,
+          "rmse": 156.1767161476597
+        },
+        "Moving average (3)": {
+          "mae": 151.11111111111111,
+          "rmse": 160.88413129859546
+        },
+        "Linear regression": {
+          "mae": 153.54951690821258,
+          "rmse": 169.92931503554829
+        },
+        "ARIMA(1,1,1)": {
+          "mae": 144.53394415841112,
+          "rmse": 153.5332310265795
+        }
+      },
+      "best": "ARIMA(1,1,1)",
+      "next_month": "2026-11",
+      "next_month_forecast": 1475,
+      "last_actual": 1504,
+      "arima_used": true
+    },
+    {
+      "department": "Department of Posts",
+      "n_months": 48,
+      "models": {
+        "Naive": {
+          "mae": 150.66666666666666,
+          "rmse": 183.33666663636419
+        },
+        "Moving average (3)": {
+          "mae": 167.2222222222222,
+          "rmse": 195.081559392001
+        },
+        "Linear regression": {
+          "mae": 140.137077294686,
+          "rmse": 182.85886572947427
+        },
+        "ARIMA(1,1,1)": {
+          "mae": 171.5174348561779,
+          "rmse": 197.79499347962056
+        }
+      },
+      "best": "Linear regression",
+      "next_month": "2026-11",
+      "next_month_forecast": 1866,
+      "last_actual": 1753,
+      "arima_used": true
+    },
+    {
+      "department": "Department of Revenue",
+      "n_months": 48,
+      "models": {
+        "Naive": {
+          "mae": 152.16666666666666,
+          "rmse": 198.98450525941294
+        },
+        "Moving average (3)": {
+          "mae": 171.6111111111111,
+          "rmse": 204.08581165411405
+        },
+        "Linear regression": {
+          "mae": 176.49214975845425,
+          "rmse": 213.99863671458402
+        },
+        "ARIMA(1,1,1)": {
+          "mae": 160.916923259732,
+          "rmse": 200.08299722596703
+        }
+      },
+      "best": "Naive",
+      "next_month": "2026-11",
+      "next_month_forecast": 2084,
+      "last_actual": 2084,
+      "arima_used": true
+    },
+    {
+      "department": "Department of Telecommunications",
+      "n_months": 48,
+      "models": {
+        "Naive": {
+          "mae": 142.16666666666666,
+          "rmse": 164.342629892551
+        },
+        "Moving average (3)": {
+          "mae": 162.7777777777778,
+          "rmse": 187.61376795407617
+        },
+        "Linear regression": {
+          "mae": 170.4335748792271,
+          "rmse": 193.53089243019247
+        },
+        "ARIMA(1,1,1)": {
+          "mae": 133.52707285578563,
+          "rmse": 162.7047059727353
+        }
+      },
+      "best": "ARIMA(1,1,1)",
+      "next_month": "2026-11",
+      "next_month_forecast": 1335,
+      "last_actual": 1318,
+      "arima_used": true
+    },
+    {
+      "department": "Ministry of Railways",
+      "n_months": 48,
+      "models": {
+        "Naive": {
+          "mae": 68.66666666666667,
+          "rmse": 85.32486937190899
+        },
+        "Moving average (3)": {
+          "mae": 76.72222222222221,
+          "rmse": 101.36065055770645
+        },
+        "Linear regression": {
+          "mae": 105.89251207729467,
+          "rmse": 115.0439683008503
+        },
+        "ARIMA(1,1,1)": {
+          "mae": 66.71202890166853,
+          "rmse": 80.11820937576289
+        }
+      },
+      "best": "ARIMA(1,1,1)",
+      "next_month": "2026-11",
+      "next_month_forecast": 1510,
+      "last_actual": 1482,
+      "arima_used": true
+    }
+  ]
+}

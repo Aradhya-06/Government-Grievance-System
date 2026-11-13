@@ -1,0 +1,27 @@
+{% extends "base.html" %}{% load humanize %}{% block title %}My grievances{% endblock %}
+{% block content %}<div class="container">
+<div class="page-head d-flex flex-wrap justify-content-between align-items-end gap-2">
+  <div><span class="chip">Citizen dashboard</span><h1 class="mt-2">Hello, {{ user.first_name|default:user.username }}</h1></div>
+  <a class="btn btn-accent" href="{% url 'grievances:submit' %}"><i class="bi bi-plus-lg"></i> New grievance</a></div>
+<div class="row g-3 mb-4">
+  <div class="col-md-4"><div class="card-gq kpi"><div class="ico ico-navy"><i class="bi bi-inbox-fill"></i></div><div><div class="num">{{ counts.total }}</div><div class="lbl">Total submitted</div></div></div></div>
+  <div class="col-md-4"><div class="card-gq kpi"><div class="ico ico-saf"><i class="bi bi-hourglass-split"></i></div><div><div class="num">{{ counts.pending }}</div><div class="lbl">Being processed</div></div></div></div>
+  <div class="col-md-4"><div class="card-gq kpi"><div class="ico ico-teal"><i class="bi bi-check2-circle"></i></div><div><div class="num">{{ counts.resolved }}</div><div class="lbl">Resolved</div></div></div></div></div>
+<div class="card-gq"><div class="card-h"><h5>My grievances</h5>
+  <form class="d-flex gap-2" method="get"><input class="form-control form-control-sm" name="q" value="{{ q }}" placeholder="Search subject or ID" style="width:200px">
+    <select class="form-select form-select-sm" name="status" style="width:150px" onchange="this.form.submit()"><option value="">All statuses</option>
+      {% for v,l in status_choices %}<option value="{{ v }}" {% if v == status %}selected{% endif %}>{{ l }}</option>{% endfor %}</select>
+    <button class="btn btn-soft btn-sm"><i class="bi bi-search"></i></button></form></div>
+{% if page.object_list %}<div class="table-responsive"><table class="table table-gq">
+  <thead><tr><th>Tracking ID</th><th>Subject</th><th>Department</th><th>Status</th><th>Submitted</th><th></th></tr></thead><tbody>
+  {% for g in page %}<tr><td><a class="tid" href="{% url 'grievances:detail' g.tracking_id %}">{{ g.tracking_id }}</a></td>
+    <td>{{ g.subject|truncatechars:60 }}<div class="small muted">{{ g.predicted_category }}</div></td>
+    <td class="small">{{ g.department.name }}</td><td><span class="badge-s {{ g.status_css }}">{{ g.get_status_display }}</span></td>
+    <td class="small muted">{{ g.submitted_at|date:"d M Y" }}<br>{{ g.submitted_at|naturaltime }}</td>
+    <td class="text-end"><a class="btn btn-soft btn-sm" href="{% url 'grievances:detail' g.tracking_id %}">View</a></td></tr>{% endfor %}</tbody></table></div>
+  {% if page.paginator.num_pages > 1 %}<div class="card-b"><nav><ul class="pagination mb-0 justify-content-center">
+    {% if page.has_previous %}<li class="page-item"><a class="page-link" href="?page={{ page.previous_page_number }}&q={{ q }}&status={{ status }}">Prev</a></li>{% endif %}
+    <li class="page-item active"><span class="page-link">{{ page.number }} / {{ page.paginator.num_pages }}</span></li>
+    {% if page.has_next %}<li class="page-item"><a class="page-link" href="?page={{ page.next_page_number }}&q={{ q }}&status={{ status }}">Next</a></li>{% endif %}</ul></nav></div>{% endif %}
+{% else %}<div class="empty"><i class="bi bi-inbox"></i><p class="mt-2 mb-3">No grievances found.</p><a class="btn btn-primary" href="{% url 'grievances:submit' %}">Submit your first grievance</a></div>{% endif %}
+</div></div>{% endblock %}

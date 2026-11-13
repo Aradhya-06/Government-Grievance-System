@@ -1,0 +1,136 @@
+{
+  "rows": [
+    {
+      "threshold": 0.3,
+      "precision": 0.6683,
+      "recall": 1.0,
+      "f1": 0.8011,
+      "tp": 421,
+      "fp": 209,
+      "fn": 0
+    },
+    {
+      "threshold": 0.4,
+      "precision": 0.7249,
+      "recall": 0.9952,
+      "f1": 0.8388,
+      "tp": 419,
+      "fp": 159,
+      "fn": 2
+    },
+    {
+      "threshold": 0.5,
+      "precision": 0.7769,
+      "recall": 0.943,
+      "f1": 0.8519,
+      "tp": 397,
+      "fp": 114,
+      "fn": 24
+    },
+    {
+      "threshold": 0.55,
+      "precision": 0.7899,
+      "recall": 0.8575,
+      "f1": 0.8223,
+      "tp": 361,
+      "fp": 96,
+      "fn": 60
+    },
+    {
+      "threshold": 0.6,
+      "precision": 0.7752,
+      "recall": 0.7126,
+      "f1": 0.7426,
+      "tp": 300,
+      "fp": 87,
+      "fn": 121
+    },
+    {
+      "threshold": 0.7,
+      "precision": 0.7678,
+      "recall": 0.3848,
+      "f1": 0.5127,
+      "tp": 162,
+      "fp": 49,
+      "fn": 259
+    }
+  ],
+  "rows_text_only": [
+    {
+      "threshold": 0.3,
+      "precision": 0.1673,
+      "recall": 1.0,
+      "f1": 0.2867,
+      "tp": 421,
+      "fp": 2095,
+      "fn": 0
+    },
+    {
+      "threshold": 0.4,
+      "precision": 0.2163,
+      "recall": 0.9952,
+      "f1": 0.3554,
+      "tp": 419,
+      "fp": 1518,
+      "fn": 2
+    },
+    {
+      "threshold": 0.5,
+      "precision": 0.2834,
+      "recall": 0.943,
+      "f1": 0.4358,
+      "tp": 397,
+      "fp": 1004,
+      "fn": 24
+    },
+    {
+      "threshold": 0.55,
+      "precision": 0.3057,
+      "recall": 0.8575,
+      "f1": 0.4507,
+      "tp": 361,
+      "fp": 820,
+      "fn": 60
+    },
+    {
+      "threshold": 0.6,
+      "precision": 0.3375,
+      "recall": 0.7126,
+      "f1": 0.458,
+      "tp": 300,
+      "fp": 589,
+      "fn": 121
+    },
+    {
+      "threshold": 0.7,
+      "precision": 0.3961,
+      "recall": 0.3848,
+      "f1": 0.3904,
+      "tp": 162,
+      "fp": 247,
+      "fn": 259
+    }
+  ],
+  "location_aware": true,
+  "best": {
+    "threshold": 0.5,
+    "precision": 0.7769,
+    "recall": 0.943,
+    "f1": 0.8519,
+    "tp": 397,
+    "fp": 114,
+    "fn": 24
+  },
+  "best_text_only": {
+    "threshold": 0.6,
+    "precision": 0.3375,
+    "recall": 0.7126,
+    "f1": 0.458,
+    "tp": 300,
+    "fp": 589,
+    "fn": 121
+  },
+  "n": 591,
+  "synthetic_data": true,
+  "note": "Ground truth = shared cluster_id. A pair is a predicted duplicate when cosine >= threshold AND the location matches. Synthetic paraphrases are easier than real duplicates."
+}
